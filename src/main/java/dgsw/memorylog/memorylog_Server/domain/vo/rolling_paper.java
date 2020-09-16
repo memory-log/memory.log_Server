@@ -1,11 +1,11 @@
 package dgsw.memorylog.memorylog_Server.domain.vo;
 
-import org.springframework.context.annotation.Primary;
-
-import javax.persistence.Entity;
+import lombok.Getter;
+import lombok.Setter;
 import java.sql.Time;
 
-@Entity
+@Getter
+@Setter
 public class rolling_paper {
     private int idx;
     private int user_idx;

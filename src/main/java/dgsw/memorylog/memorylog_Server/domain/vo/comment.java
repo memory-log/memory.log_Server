@@ -1,8 +1,7 @@
 package dgsw.memorylog.memorylog_Server.domain.vo;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
-
+import lombok.Getter;
+import lombok.Setter;
 import java.sql.Time;
 
 @Getter
