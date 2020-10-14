@@ -1,6 +1,5 @@
-package dgsw.memorylog.memorylog_Server.domain.entity;
+package dgsw.memorylog.memorylog_Server.database.entity;
 
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 

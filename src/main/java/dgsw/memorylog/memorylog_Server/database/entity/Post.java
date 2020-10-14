@@ -1,4 +1,4 @@
-package dgsw.memorylog.memorylog_Server.domain.entity;
+package dgsw.memorylog.memorylog_Server.database.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
