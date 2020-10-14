@@ -7,10 +7,10 @@ import javax.persistence.*;
 import java.sql.Time;
 
 @Entity
-@Table(name = "post_content")
+@Table(name = "post_comment")
 @Getter
 @Setter
-public class PostContent {
+public class PostComment {
     @Id
     @Column(name = "idx")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class PostContent {
     @Column(name = "location", nullable = false)
     private String location;
 
-    @Column(name = "comment")
+    @Column(name = "content")
     private String comment;
 
     @Column(name = "image")
