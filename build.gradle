@@ -24,6 +24,10 @@ dependencies {
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0'
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+	compile 'javax.validation:validation-api:2.0.1.Final'
+	compile 'org.hibernate.validator:hibernate-validator:6.0.8.Final'
+	compile 'javax.el:javax.el-api:3.0.0'
+	compile 'org.glassfish:javax.el:3.0.0'
 }
 
 test {
