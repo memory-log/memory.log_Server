@@ -8,9 +8,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class MemberSignUpVo {
     @NotBlank
-    private Integer idx;
-
-    @NotBlank
     private String name;
 
     @Email
