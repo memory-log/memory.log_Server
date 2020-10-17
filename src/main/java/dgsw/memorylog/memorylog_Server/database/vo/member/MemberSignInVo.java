@@ -11,7 +11,7 @@ import javax.validation.constraints.NotEmpty;
  * 멤버 로그인 오브젝트
  */
 @Getter
-public class MemberLoginVo {
+public class MemberSignInVo {
     @Email
     @NotBlank
     private String email;

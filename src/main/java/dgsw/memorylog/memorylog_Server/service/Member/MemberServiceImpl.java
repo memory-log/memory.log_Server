@@ -2,7 +2,9 @@ package dgsw.memorylog.memorylog_Server.service.Member;
 
 import dgsw.memorylog.memorylog_Server.database.entity.Member;
 import dgsw.memorylog.memorylog_Server.database.repository.MemberRepository;
-import dgsw.memorylog.memorylog_Server.database.vo.member.MemberLoginVo;
+import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignInVo;
+import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignUpVo;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,11 +20,10 @@ public class MemberServiceImpl implements MemberService{
      * 로그인
      * @return 멤버 인덱스
      */
-    @ResponseStatus(HttpStatus.OK)
     @Override
-    public Integer login(MemberLoginVo memberLoginVo) {
+    public Integer signIn(MemberSignInVo memberSignInVo) {
         try {
-            Member member = memberRepo.findByEmailAndPw(memberLoginVo.getEmail(), memberLoginVo.getPw());
+            Member member = memberRepo.findByEmailAndPw(memberSignInVo.getEmail(), memberSignInVo.getPw());
 
             if (member == null) {
                 throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "로그인 실패");
@@ -33,4 +34,17 @@ public class MemberServiceImpl implements MemberService{
             throw e;
         }
     }
+
+    @Override
+    public Integer signUp(MemberSignUpVo memberSignUpVo) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            Member mappedMember = modelMapper.map(memberSignUpVo, Member.class);
+            Member createdMember = memberRepo.save(mappedMember);
+            return createdMember.getIdx();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
 }
