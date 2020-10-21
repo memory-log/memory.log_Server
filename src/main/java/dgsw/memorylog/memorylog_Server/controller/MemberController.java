@@ -4,12 +4,15 @@ import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignInVo;
 import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignUpVo;
 import dgsw.memorylog.memorylog_Server.lib.MakeJson;
 import dgsw.memorylog.memorylog_Server.service.Member.MemberServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @CrossOrigin
+@Api(value = "멤버 API")
 @RestController
 @RequestMapping("/member")
 public class MemberController {
@@ -20,6 +23,7 @@ public class MemberController {
     MakeJson makeJson = new MakeJson();
 
     @GetMapping("/signin")
+    @ApiOperation(value = "로그인")
     @ResponseBody()
     public Object signin(@RequestBody @Valid MemberSignInVo memberSignInVo) {
         try {
@@ -37,6 +41,7 @@ public class MemberController {
     }
 
     @GetMapping("/signup")
+    @ApiOperation(value = "회원가입")
     @ResponseBody()
     public Object signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
         try {

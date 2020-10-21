@@ -16,6 +16,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.jsonwebtoken:jjwt:0.9.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -30,6 +31,8 @@ dependencies {
 	compile 'javax.el:javax.el-api:3.0.0'
 	compile 'org.glassfish:javax.el:3.0.0'
 	compile 'org.modelmapper:modelmapper:2.3.0'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.2.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.2.2'
 }
 
 test {
