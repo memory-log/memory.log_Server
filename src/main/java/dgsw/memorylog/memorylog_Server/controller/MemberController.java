@@ -68,7 +68,8 @@ public class MemberController {
     @ApiOperation(value = "토큰 갱신")
     public ResponseData token(@RequestBody @Valid MemberTokenVo memberTokenVo) {
         try {
-            return new ResponseData(HttpStatus.OK, "갱신 성공.", new Map<String, Object>);
+            Map<String, Object> data = new HashMap<String, Object>();
+            return new ResponseData(HttpStatus.OK, "갱신 성공.", data);
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
