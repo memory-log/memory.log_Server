@@ -45,4 +45,19 @@ public class MemberServiceImpl implements MemberService{
             throw e;
         }
     }
+
+    /**
+     * 이메일 중복 확인
+     * @param email
+     * @return
+     */
+    @Override
+    public boolean validateDupEmail(String email) {
+        Member emailDuplicateMember = memberRepo.findByEmail(email);
+        if (emailDuplicateMember != null) {
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "중복된 이메일.");
+        }
+
+        return true;
+    }
 }

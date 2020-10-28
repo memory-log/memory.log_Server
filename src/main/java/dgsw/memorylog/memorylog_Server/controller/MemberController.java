@@ -3,10 +3,12 @@ package dgsw.memorylog.memorylog_Server.controller;
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberEmailVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberTokenVo;
 import dgsw.memorylog.memorylog_Server.enums.JwtToken;
+import dgsw.memorylog.memorylog_Server.service.EmailAuthentication.EmailAuthenticationServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.Member.MemberServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.jwt.JwtServiceImpl;
 import io.swagger.annotations.Api;
@@ -33,6 +35,8 @@ public class MemberController {
     @Autowired
     private JwtServiceImpl jwtService;
 
+    @Autowired
+    private EmailAuthenticationServiceImpl emailAuthenticationService;
 
     @GetMapping("/getinfo")
     @ApiOperation(value = "내 정보 받기")
@@ -89,11 +93,29 @@ public class MemberController {
     @ApiOperation(value = "토큰 갱신")
     public ResponseData token(@RequestBody @Valid MemberTokenVo memberTokenVo) {
         try {
+            String accessToken = jwtService.refresh(memberTokenVo.getRefreshToken());
             Map<String, Object> data = new HashMap<String, Object>();
+            data.put("accessToken", accessToken);
             return new ResponseData(HttpStatus.OK, "갱신 성공.", data);
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @PostMapping("/email/code")
+    @ApiOperation(value = "인증 메일 발송")
+    public Response sendEmailCode(@RequestBody @Valid MemberEmailVo memberEmailVo) {
+        try {
+            memberService.validateDupEmail(memberEmailVo.getEmail());
+            emailAuthenticationService.sendEmailCode(memberEmailVo.getEmail());
+            return new Response(HttpStatus.OK, "전송 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
