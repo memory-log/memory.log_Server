@@ -1,14 +1,13 @@
 package dgsw.memorylog.memorylog_Server.service.Member;
 
-import dgsw.memorylog.memorylog_Server.database.entity.Member;
-import dgsw.memorylog.memorylog_Server.database.repository.MemberRepository;
-import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignInVo;
-import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignUpVo;
+import dgsw.memorylog.memorylog_Server.domain.entity.Member;
+import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Service

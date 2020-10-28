@@ -1,4 +1,4 @@
-package dgsw.memorylog.memorylog_Server.database.vo.member;
+package dgsw.memorylog.memorylog_Server.domain.vo.member;
 
 import lombok.Getter;
 

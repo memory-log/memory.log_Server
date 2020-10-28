@@ -1,4 +1,4 @@
-package dgsw.memorylog.memorylog_Server.database.vo.http;
+package dgsw.memorylog.memorylog_Server.domain.vo.http;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
