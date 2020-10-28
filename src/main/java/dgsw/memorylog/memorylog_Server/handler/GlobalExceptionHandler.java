@@ -1,8 +1,7 @@
 package dgsw.memorylog.memorylog_Server.handler;
 
-import dgsw.memorylog.memorylog_Server.database.vo.http.Response;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.WebExchangeBindException;
