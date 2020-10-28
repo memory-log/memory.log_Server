@@ -1,5 +1,6 @@
 package dgsw.memorylog.memorylog_Server.controller;
 
+import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,24 @@ public class MemberController {
 
     @Autowired
     private JwtServiceImpl jwtService;
+
+
+    @GetMapping("/getinfo")
+    @ApiOperation(value = "내 정보 받기")
+    public ResponseData getinfo(HttpServletRequest request) {
+        try {
+            Member member = (Member)request.getAttribute("member");
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("Idx", member.getIdx());
+            data.put("name", member.getName());
+            data.put("Email", member.getEmail());
+            return new ResponseData(HttpStatus.OK, "내 정보 받기 성공.", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
 
     @PostMapping("/signin")
     @ApiOperation(value = "로그인")
@@ -76,4 +96,5 @@ public class MemberController {
             throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
+
 }
