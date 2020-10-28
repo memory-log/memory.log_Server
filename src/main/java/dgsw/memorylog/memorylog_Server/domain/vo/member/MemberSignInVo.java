@@ -1,11 +1,9 @@
-package dgsw.memorylog.memorylog_Server.database.vo.member;
+package dgsw.memorylog.memorylog_Server.domain.vo.member;
 
-import com.sun.istack.NotNull;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 /**
  * 멤버 로그인 오브젝트

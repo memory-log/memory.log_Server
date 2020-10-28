@@ -1,6 +1,6 @@
-package dgsw.memorylog.memorylog_Server.database.repository;
+package dgsw.memorylog.memorylog_Server.domain.repository;
 
-import dgsw.memorylog.memorylog_Server.database.entity.PostComment;
+import dgsw.memorylog.memorylog_Server.domain.entity.PostComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
