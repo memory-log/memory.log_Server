@@ -45,5 +45,4 @@ public class MemberServiceImpl implements MemberService{
             throw e;
         }
     }
-
 }

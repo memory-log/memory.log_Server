@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class ResponseData extends Response{
-    private Object data;
+    private final Object data;
 
     public ResponseData(HttpStatus status, String message, Object data) {
         super(status, message);
