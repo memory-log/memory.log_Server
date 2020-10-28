@@ -6,4 +6,5 @@ import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
 public interface MemberService {
     public Integer signIn(MemberSignInVo memberSignInVo);
     public Integer signUp(MemberSignUpVo memberSignUpVo);
+    public boolean validateDupEmail(String email);
 }
