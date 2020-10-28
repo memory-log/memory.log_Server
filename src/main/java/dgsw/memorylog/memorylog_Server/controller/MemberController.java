@@ -1,15 +1,23 @@
 package dgsw.memorylog.memorylog_Server.controller;
 
-import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignInVo;
-import dgsw.memorylog.memorylog_Server.database.vo.member.MemberSignUpVo;
-import dgsw.memorylog.memorylog_Server.lib.MakeJson;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberTokenVo;
+import dgsw.memorylog.memorylog_Server.enums.JwtToken;
 import dgsw.memorylog.memorylog_Server.service.Member.MemberServiceImpl;
+import dgsw.memorylog.memorylog_Server.service.jwt.JwtServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @Api(value = "멤버 API")
@@ -20,42 +28,51 @@ public class MemberController {
     @Autowired
     private MemberServiceImpl memberService;
 
-    MakeJson makeJson = new MakeJson();
+    @Autowired
+    private JwtServiceImpl jwtService;
 
-    @GetMapping("/signin")
+    @PostMapping("/signin")
     @ApiOperation(value = "로그인")
-    @ResponseBody()
-    public Object signin(@RequestBody @Valid MemberSignInVo memberSignInVo) {
+    public ResponseData signin(@RequestBody @Valid MemberSignInVo memberSignInVo) {
         try {
             Integer memberIdx = memberService.signIn(memberSignInVo);
-            makeJson.setJson("Status", 200);
-            makeJson.setJson("Idx", memberIdx);
-            makeJson.setJson("Message", "로그인 성공");
-            return makeJson.getJson();
-        }catch (Exception e){
-            makeJson.setJson("Status", 400);
-            makeJson.setJson("Idx", null);
-            makeJson.setJson("Message", "로그인 실패");
-            return makeJson.getJson();
+            String accessToken = jwtService.createToken(memberIdx, JwtToken.ACCESS);
+            String refreshToken = jwtService.createToken(memberIdx, JwtToken.REFRESH);
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("accessToken", accessToken);
+            data.put("refreshToken", refreshToken);
+           return new ResponseData(HttpStatus.OK, "로그인 성공.", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
-    @GetMapping("/signup")
+    @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
-    @ResponseBody()
-    public Object signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
+    public Response signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
         try {
             Integer memberIdx = memberService.signUp(memberSignUpVo);
-            makeJson.setJson("Status", 200);
-            makeJson.setJson("Idx", memberIdx);
-            makeJson.setJson("Message", "회원가입 성공");
-            return makeJson.getJson();
-        }catch (Exception e) {
-            makeJson.setJson("Status", 500);
-            makeJson.setJson("Idx", null);
-            makeJson.setJson("Message", "회원가입 실패");
-            return makeJson.getJson();
+            return new Response(HttpStatus.OK, "가입 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
+    @PostMapping("/token")
+    @ApiOperation(value = "토큰 갱신")
+    public ResponseData token(@RequestBody @Valid MemberTokenVo memberTokenVo) {
+        try {
+            return new ResponseData(HttpStatus.OK, "갱신 성공.", new Map<String, Object>);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
 }
