@@ -47,7 +47,8 @@ public class MemberController {
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            e.printStackTrace();
+            throw e;
         }
     }
 

@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class Response {
-    private int status;
-    private String message;
+    private final int status;
+    private final String message;
 
     public Response(HttpStatus status, String message) {
         this.status = status.value();
