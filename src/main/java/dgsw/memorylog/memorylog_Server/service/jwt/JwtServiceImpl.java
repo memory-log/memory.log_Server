@@ -3,7 +3,6 @@ package dgsw.memorylog.memorylog_Server.service.jwt;
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import dgsw.memorylog.memorylog_Server.enums.JwtToken;
-import dgsw.memorylog.memorylog_Server.lib.DateConstant;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,11 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class JwtServiceImpl implements JwtService {
@@ -39,21 +36,25 @@ public class JwtServiceImpl implements JwtService {
      */
     @Override
     public String createToken(Integer idx, JwtToken tokenType) {
-        Date expiredAt = new Date();
+        Date now = new Date();
+        Calendar expiredAt = Calendar.getInstance();
+        expiredAt.setTime(now);
+
         String secretKey = "";
 
         switch (tokenType) {
-            case REFRESH:
-                expiredAt.setTime(expiredAt.getTime() + DateConstant.MILLISECONDS_FOR_A_HOUR);
+            case ACCESS:
+                expiredAt.add(Calendar.HOUR, 1);
                 secretKey = secretAccessKey;
                 break;
-            case ACCESS:
-                expiredAt.setTime(expiredAt.getTime() + DateConstant.MILLISECONDS_FOR_A_HOUR * 24 * 7);
+            case REFRESH:
+                expiredAt.add(Calendar.DATE, 30);
                 secretKey = secretRefreshKey;
                 break;
         }
 
-        Key signInKey = new SecretKeySpec(secretKey.getBytes(), signatureAlgorithm.getJcaName());
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
+        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
 
         Map<String, Object> headerMap = new HashMap<String, Object>();
 
@@ -66,8 +67,8 @@ public class JwtServiceImpl implements JwtService {
 
         JwtBuilder builder = Jwts.builder().setHeaderParams(headerMap)
                 .setClaims(claimsMap)
-                .setExpiration(expiredAt)
-                .signWith(SignatureAlgorithm.HS256, signInKey);
+                .setExpiration(expiredAt.getTime())
+                .signWith(signatureAlgorithm, signingKey);
 
         return builder.compact();
     }
@@ -81,8 +82,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Member validateToken(String token) {
         try {
-            Key signInKey = new SecretKeySpec(secretAccessKey.getBytes(), signatureAlgorithm.getJcaName());
-            Claims claims = Jwts.parser().setSigningKey(signInKey)
+            Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretAccessKey))
                     .parseClaimsJws(token).getBody();
 
             Optional<Member> member = memberRepo.findById((Integer) claims.get("idx"));
@@ -112,8 +112,7 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String refresh(String refreshToken) {
         try {
-            Key signInKey = new SecretKeySpec(secretRefreshKey.getBytes(), signatureAlgorithm.getJcaName());
-            Claims claims = Jwts.parser().setSigningKey(signInKey)
+            Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretRefreshKey))
                     .parseClaimsJws(refreshToken).getBody();
 
             Optional<Member> member = memberRepo.findById((Integer) claims.get("idx"));
@@ -124,6 +123,7 @@ public class JwtServiceImpl implements JwtService {
 
             return createToken(member.get().getIdx(), JwtToken.ACCESS);
         } catch (ExpiredJwtException e) {
+            e.printStackTrace();
             throw new HttpClientErrorException(HttpStatus.GONE, "토큰 만료.");
         } catch (SignatureException | MalformedJwtException e) {
             throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "토큰 위조.");
