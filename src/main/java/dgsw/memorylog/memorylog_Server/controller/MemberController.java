@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -120,4 +121,14 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/email/confirm")
+    @ApiOperation(value = "인증 메일 검증")
+    public ModelAndView emailConfirm(@RequestParam("code") String code) {
+        boolean isExist = emailAuthenticationService.emailConfirm(code);
+
+        ModelAndView mav = new ModelAndView("confirm");
+        mav.addObject("isConfirm", isExist);
+
+        return mav;
+    }
 }
