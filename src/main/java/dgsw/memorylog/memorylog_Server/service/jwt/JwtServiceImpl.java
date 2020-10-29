@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -92,6 +93,8 @@ public class JwtServiceImpl implements JwtService {
            }
 
             return member.get();
+        } catch (HttpClientErrorException e) {
+            throw e;
         } catch (ExpiredJwtException e) {
             throw new HttpClientErrorException(HttpStatus.GONE, "토큰 만료.");
         } catch (SignatureException | MalformedJwtException e) {
@@ -99,8 +102,7 @@ public class JwtServiceImpl implements JwtService {
         } catch (IllegalArgumentException e) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "토큰 없음.");
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
@@ -122,6 +124,8 @@ public class JwtServiceImpl implements JwtService {
             }
 
             return createToken(member.get().getIdx(), JwtToken.ACCESS);
+        } catch (HttpClientErrorException e) {
+            throw e;
         } catch (ExpiredJwtException e) {
             e.printStackTrace();
             throw new HttpClientErrorException(HttpStatus.GONE, "토큰 만료.");
@@ -130,8 +134,7 @@ public class JwtServiceImpl implements JwtService {
         } catch (IllegalArgumentException e) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "토큰 없음.");
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 }

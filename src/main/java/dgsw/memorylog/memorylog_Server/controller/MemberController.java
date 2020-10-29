@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,7 @@ public class MemberController {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw e;
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
@@ -72,7 +73,7 @@ public class MemberController {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
@@ -86,7 +87,7 @@ public class MemberController {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
@@ -102,7 +103,7 @@ public class MemberController {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
@@ -117,18 +118,26 @@ public class MemberController {
             throw e;
         } catch (Exception e) {
             e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
         }
     }
 
     @GetMapping("/email/confirm")
     @ApiOperation(value = "인증 메일 검증")
     public ModelAndView emailConfirm(@RequestParam("code") String code) {
-        boolean isExist = emailAuthenticationService.emailConfirm(code);
+        try {
+            boolean isExist = emailAuthenticationService.emailConfirm(code);
 
-        ModelAndView mav = new ModelAndView("confirm");
-        mav.addObject("isConfirm", isExist);
+            ModelAndView mav = new ModelAndView("confirm");
+            mav.addObject("isConfirm", isExist);
 
-        return mav;
+            return mav;
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+
     }
 }
