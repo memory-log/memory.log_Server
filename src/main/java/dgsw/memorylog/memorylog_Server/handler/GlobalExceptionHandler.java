@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 @ControllerAdvice
 @ResponseBody
@@ -16,6 +17,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpClientErrorException.class)
     public Response handleHttpClientErrorException(HttpClientErrorException e) {
         return new Response(e.getStatusCode(), e.getMessage());
+    }
+
+    @ExceptionHandler(HttpServerErrorException.class)
+    public Response handleHttpServerErrorException(HttpServerErrorException e) {
+        return new Response(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
     }
 
     @ExceptionHandler(WebExchangeBindException.class)
