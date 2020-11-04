@@ -1,18 +1,14 @@
 package dgsw.memorylog.memorylog_Server.service.EmailAuthentication;
 
-import dgsw.memorylog.memorylog_Server.domain.entity.EmailAuthentication;
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import dgsw.memorylog.memorylog_Server.domain.repository.EmailAuthenticationRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
-import java.util.Calendar;
-import java.util.Date;
 
 @Service
 public class EmailAuthenticationServiceImpl implements EmailAuthenticationService {
