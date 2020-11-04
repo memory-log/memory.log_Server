@@ -1,6 +1,8 @@
 package dgsw.memorylog.memorylog_Server.service.Member;
 
+import dgsw.memorylog.memorylog_Server.domain.entity.EmailAuthentication;
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
+import dgsw.memorylog.memorylog_Server.domain.repository.EmailAuthenticationRepository;
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
@@ -14,6 +16,9 @@ import org.springframework.web.client.HttpClientErrorException;
 public class MemberServiceImpl implements MemberService{
     @Autowired
     private MemberRepository memberRepo;
+
+    @Autowired
+    private EmailAuthenticationRepository EmailAuthenticationRepo;
 
     /**
      * 로그인
@@ -37,6 +42,12 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Integer signUp(MemberSignUpVo memberSignUpVo) {
         try {
+            EmailAuthentication emailAuthentication = EmailAuthenticationRepo.findByEmail(memberSignUpVo.getEmail());
+
+            if (emailAuthentication == null || !emailAuthentication.getIsCertified()) {
+                throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 안됨.");
+            }
+
             ModelMapper modelMapper = new ModelMapper();
             Member mappedMember = modelMapper.map(memberSignUpVo, Member.class);
             Member createdMember = memberRepo.save(mappedMember);

@@ -24,7 +24,10 @@ public class EmailAuthentication {
     @JsonProperty("expire_time")
     private Date expireTime;
 
+    @Column(nullable = true)
+    private String code;
+
     @Column(nullable = false)
     @JsonProperty("is_certified")
-    private Boolean isCertified;
+    private Boolean isCertified = false;
 }
