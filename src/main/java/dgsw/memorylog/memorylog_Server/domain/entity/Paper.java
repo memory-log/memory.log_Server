@@ -4,10 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.sql.Date;
 import java.sql.Time;
 
 @Entity
@@ -17,6 +15,7 @@ import java.sql.Time;
 public class Paper {
     @Id
     @Column(name = "idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
     @Column(name = "member_idx", nullable = false)
@@ -35,6 +34,6 @@ public class Paper {
     private Time end_time;
 
     @CreatedDate
-    @Column(name = "created_at", nullable = false)
-    private Time created_at;
+    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP" ,nullable = false)
+    private Date created_at;
 }
