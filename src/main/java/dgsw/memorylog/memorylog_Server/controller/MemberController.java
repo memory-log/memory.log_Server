@@ -44,6 +44,7 @@ public class MemberController {
         try {
             Member member = (Member)request.getAttribute("member");
             Map<String, Object> data = new HashMap<String, Object>();
+            System.out.println("멤버" + member);
             data.put("Idx", member.getIdx());
             data.put("name", member.getName());
             data.put("Email", member.getEmail());
@@ -77,10 +78,12 @@ public class MemberController {
 
     @PostMapping("/signup")
     @ApiOperation(value = "회원가입")
-    public Response signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
+    public ResponseData signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
         try {
             Integer memberIdx = memberService.signUp(memberSignUpVo);
-            return new Response(HttpStatus.OK, "가입 성공.");
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("member_idx", memberIdx);
+            return new ResponseData(HttpStatus.OK, "가입 성공.", data);
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
