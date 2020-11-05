@@ -1,5 +1,6 @@
 package dgsw.memorylog.memorylog_Server.service.EmailAuthentication;
 
+import dgsw.memorylog.memorylog_Server.domain.entity.EmailAuthentication;
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import dgsw.memorylog.memorylog_Server.lib.Encrypt;
 import dgsw.memorylog.memorylog_Server.lib.MailHandle;
@@ -20,9 +21,6 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
 
     @Autowired
     private MemberRepository memberRepo;
-
-//    @Autowired
-//    private JavaMailSender javaMailSender;
 
     @Autowired
     private MailHandle mailHandle;
