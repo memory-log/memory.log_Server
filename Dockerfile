@@ -11,10 +11,10 @@ VOLUME /tmp
 EXPOSE 80
 
 # The application's jar file
-ARG WAR_FILE=build/libs/memorylog_Server-0.0.1-SNAPSHOT.war
+ARG JAR_FILE=build/libs/memorylog_Server-0.0.1-SNAPSHOT.jar
 
 # Add the application's jar to the container
-ADD ${WAR_FILE} app
+ADD ${JAR_FILE} app.jar
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "app"]
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar", "app.jar"]
