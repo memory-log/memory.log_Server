@@ -1,6 +1,5 @@
 package dgsw.memorylog.memorylog_Server.service.EmailAuthentication;
 
-import dgsw.memorylog.memorylog_Server.domain.entity.EmailAuthentication;
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import dgsw.memorylog.memorylog_Server.lib.Encrypt;
 import org.springframework.beans.factory.annotation.Autowired;
