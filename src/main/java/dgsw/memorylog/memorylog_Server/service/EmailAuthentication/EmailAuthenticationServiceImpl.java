@@ -2,19 +2,14 @@ package dgsw.memorylog.memorylog_Server.service.EmailAuthentication;
 
 import dgsw.memorylog.memorylog_Server.domain.repository.MemberRepository;
 import dgsw.memorylog.memorylog_Server.lib.Encrypt;
+import dgsw.memorylog.memorylog_Server.lib.MailHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import dgsw.memorylog.memorylog_Server.domain.repository.EmailAuthenticationRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.mail.internet.MimeMessage;
-import java.security.MessageDigest;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,8 +21,11 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
     @Autowired
     private MemberRepository memberRepo;
 
+//    @Autowired
+//    private JavaMailSender javaMailSender;
+
     @Autowired
-    private JavaMailSender javaMailSender;
+    private MailHandle mailHandle;
 
     @Value("${spring.mail.username}")
     private String senderEmail;
@@ -57,7 +55,7 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
             }
 
             String code = Encrypt.sha256(email + expireAt.getTime() + secretKey);
-            String href = serverUrl + "/member/email/confirm?code=" + code;
+            String href = serverUrl + "/confirm?code=" + code;
 
             emailAuthentication.setExpireTime(expireAt.getTime());
             emailAuthentication.setEmail(email);
@@ -66,7 +64,7 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
 
             emailAuthenticationRepo.save(emailAuthentication);
 
-            sendEmail(email, "Memory-log 본인 확인", new StringBuffer().append("<a href='").append(href)
+            mailHandle.sendEmail(email, "Memory-log 본인 확인", new StringBuffer().append("<a href='").append(href)
                     .append("' target='blank'>")
                     .append("<p>링크를 눌러 인증하세요.</p></a>").toString());
         } catch (Exception e) {
@@ -76,17 +74,17 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
 
     @Override
     public void sendEmail(String email, String title, String content) {
-        try {
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
-            helper.setTo(email);
-            helper.setSubject(title);
-            helper.setFrom(senderEmail);
-            helper.setText(content, true);
-            javaMailSender.send(mimeMessage);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+//            helper.setTo(email);
+//            helper.setSubject(title);
+//            helper.setFrom(senderEmail);
+//            helper.setText(content, true);
+//            javaMailSender.send(mimeMessage);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
