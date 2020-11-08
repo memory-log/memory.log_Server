@@ -1,6 +1,7 @@
 package dgsw.memorylog.memorylog_Server.controller;
 
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
@@ -27,13 +28,12 @@ public class PaperController {
 
     @PostMapping("/createpaper")
     @ApiOperation(value = "롤링페이퍼 생성")
-    public ResponseData createpaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
+    public Response createpaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
         try {
             Member member = (Member)request.getAttribute("member");
-            Integer paperIdx = paperService.createPaper(member.getIdx(), paperCreatePaperVo);
+            paperService.createPaper(member, paperCreatePaperVo);
             Map<String, Object> data = new HashMap<String, Object>();
-            data.put("paperIdx", paperIdx);
-            return new ResponseData(HttpStatus.OK, "롤링페이퍼 생성 성공.", data);
+            return new Response(HttpStatus.OK, "롤링페이퍼 생성 성공.");
         } catch (HttpClientErrorException e){
             throw e;
         } catch (Exception e) {
