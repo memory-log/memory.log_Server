@@ -2,6 +2,7 @@ package dgsw.memorylog.memorylog_Server.handler;
 
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,12 +16,21 @@ import org.springframework.web.client.HttpServerErrorException;
 @ResponseBody
 public class GlobalExceptionHandler {
     @ExceptionHandler(HttpClientErrorException.class)
-    public Response handleHttpClientErrorException(HttpClientErrorException e) {
-        return new Response(e.getStatusCode(), e.getMessage());
+    public ResponseEntity<Response> handleHttpClientErrorException(HttpClientErrorException e) {
+        Response data = new Response(e.getStatusCode(), e.getMessage());
+        return new ResponseEntity<>(data, e.getStatusCode());
     }
 
     @ExceptionHandler(HttpServerErrorException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response handleHttpServerErrorException(HttpServerErrorException e) {
+        return new Response(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+    }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Response handleUnsupportedOperationException(UnsupportedOperationException e) {
+        e.printStackTrace();
         return new Response(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
     }
 

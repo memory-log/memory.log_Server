@@ -1,12 +1,13 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Time;
 
 @Entity
 @Table(name = "paper")
@@ -14,26 +15,33 @@ import java.sql.Time;
 @Setter
 public class Paper {
     @Id
-    @Column(name = "idx")
+    @Column()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @Column(name = "member_idx", nullable = false)
-    private Integer member_idx;
+    @ManyToOne(targetEntity=Member.class, fetch=FetchType.LAZY)
+    @JoinColumn(columnDefinition = "member_idx")
+    private Member member;
 
-    @Column(name = "title", nullable = false)
+    @Column(nullable = false)
     private String title;
 
-    @Column(name = "scope", nullable = false)
-    private Byte scope;
+    @Column(nullable = false)
+    private PaperScope scope;
 
-    @Column(name = "code", nullable = false)
+    @Column()
     private String code;
 
-    @Column(name = "end_time")
-    private Time end_time;
+    @Column()
+    @JsonProperty("end_time")
+    private Date endTime;
 
     @CreatedDate
-    @Column(name = "created_at", columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP" ,nullable = false)
-    private Date created_at;
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @JsonProperty("created_at")
+    private Date createdAt;
+
+    @Column()
+    @JsonProperty("updated_at")
+    private Date updatedAt;
 }

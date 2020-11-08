@@ -1,12 +1,12 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Time;
+import java.sql.Date;
 
 @Entity
 @Table(name = "paper_comment")
@@ -18,26 +18,34 @@ public class PaperComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @Column(name = "paper_idx", nullable = false)
-    private Integer post_idx;
+    @ManyToOne(targetEntity = Member.class, fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition = "member_idx")
+    private Member member;
 
-    @Column(name = "location", nullable = false)
-    private String location;
+    @ManyToOne(targetEntity = Paper.class, fetch = FetchType.LAZY)
+    @JoinColumn(columnDefinition = "paper_idx")
+    private Paper paper;
 
-    @Column(name = "content")
+    @Column(nullable = false)
+    @JsonProperty("location_x")
+    private Integer locationX;
+
+    @Column(nullable = false)
+    @JsonProperty("location_y")
+    private Integer locationY;
+
+    @Column()
     private String comment;
 
-    @Column(name = "image")
+    @Column()
     private String image;
 
-    @Column(name = "rotate")
-    private Integer rotate;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Time updated_at;
-
     @CreatedDate
-    @Column(name = "created_at", nullable = false)
-    private Time created_at;
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
+    @JsonProperty("created_at")
+    private Date createdAt;
+
+    @Column()
+    @JsonProperty("updated_at")
+    private Date updatedAt;
 }

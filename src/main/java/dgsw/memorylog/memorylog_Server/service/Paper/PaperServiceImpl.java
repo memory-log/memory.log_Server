@@ -1,5 +1,6 @@
 package dgsw.memorylog.memorylog_Server.service.Paper;
 
+import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
@@ -17,12 +18,11 @@ public class PaperServiceImpl implements PaperService{
      * @return 롤링페이퍼 인덱스
      */
     @Override
-    public Integer createPaper(Integer member_idx, PaperCreatePaperVo paperCreatePaperVo) {
+    public void createPaper(Member member, PaperCreatePaperVo paperCreatePaperVo) {
         try {
             ModelMapper modelMapper = new ModelMapper();
             Paper mappedPaper = modelMapper.map(paperCreatePaperVo, Paper.class);
-            Paper createdPaper = paperRepo.save(mappedPaper);
-            return createdPaper.getIdx();
+            paperRepo.save(mappedPaper);
         } catch (Exception e) {
             throw e;
         }
