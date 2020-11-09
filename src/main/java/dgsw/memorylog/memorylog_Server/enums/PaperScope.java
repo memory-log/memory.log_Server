@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum PaperScope implements PersistableEnum<Byte> {
-    PUBLIC(0),
-    ONLY_CODE(1),
-    PRIVATE(2);
+    PUBLIC((byte)0),
+    ONLY_CODE((byte)1),
+    PRIVATE((byte)2);
 
-    private final Integer code;
+    private final Byte code;
 
     // JPA converter
     @javax.persistence.Converter(autoApply = true)
