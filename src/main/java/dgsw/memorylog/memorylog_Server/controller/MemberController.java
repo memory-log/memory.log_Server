@@ -39,9 +39,9 @@ public class MemberController {
     @Autowired
     private EmailAuthenticationServiceImpl emailAuthenticationService;
 
-    @GetMapping("/getinfo")
+    @GetMapping("/getInfo")
     @ApiOperation(value = "내 정보 받기")
-    public ResponseData getinfo(HttpServletRequest request) {
+    public ResponseData getInfo(HttpServletRequest request) {
         try {
             Member member = (Member)request.getAttribute("member");
             Map<String, Object> data = new HashMap<String, Object>();
@@ -58,9 +58,9 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/signin")
+    @PostMapping("/signIn")
     @ApiOperation(value = "로그인")
-    public ResponseData signin(@RequestBody @Valid MemberSignInVo memberSignInVo) {
+    public ResponseData signIn(@RequestBody @Valid MemberSignInVo memberSignInVo) {
         try {
             Integer memberIdx = memberService.signIn(memberSignInVo);
             String accessToken = jwtService.createToken(memberIdx, JwtToken.ACCESS);
@@ -77,9 +77,9 @@ public class MemberController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     @ApiOperation(value = "회원가입")
-    public ResponseData signup(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
+    public ResponseData signUp(@RequestBody @Valid MemberSignUpVo memberSignUpVo) {
         try {
             Integer memberIdx = memberService.signUp(memberSignUpVo);
             Map<String, Object> data = new HashMap<String, Object>();

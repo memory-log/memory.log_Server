@@ -29,9 +29,9 @@ public class PaperController {
     @Autowired
     private PaperServiceImpl paperService;
 
-    @PostMapping("/createpaper")
+    @PostMapping("/createPaper")
     @ApiOperation(value = "롤링페이퍼 생성")
-    public Response createpaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
+    public Response createPaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
         try {
             Member member = (Member)request.getAttribute("member");
             paperCreatePaperVo.setMember(member);
@@ -46,9 +46,9 @@ public class PaperController {
         }
     }
 
-    @GetMapping("/getmypaper")
+    @GetMapping("/getMyPaper")
     @ApiOperation(value = "내 롤링페이퍼 글 조회")
-    public Response getmypaper(HttpServletRequest request) {
+    public Response getMyPaper(HttpServletRequest request) {
         try {
             Member member = (Member)request.getAttribute("member");
             List<Paper> papers = paperService.getMyPaper(member.getName());
@@ -63,9 +63,9 @@ public class PaperController {
         }
     }
 
-    @GetMapping("/showpaper")
+    @GetMapping("/showPaper")
     @ApiOperation(value = "롤링페이퍼 조회")
-    public Response showpaper() {
+    public Response showPaper() {
         try {
             List<Paper> papers = paperService.showPaper();
             Map<String, Object> data = new HashMap<String, Object>();
@@ -79,9 +79,9 @@ public class PaperController {
         }
     }
 
-    @GetMapping("/searchpaper")
+    @GetMapping("/searchPaper")
     @ApiOperation(value = "롤링페이퍼 검색")
-    public Response searchpaper(@RequestParam @Valid String target) {
+    public Response searchPaper(@RequestParam @Valid String target) {
         try {
             List<Paper> searchedByTitle = paperService.searchPaperByTitle(target);
             List<Paper> searchedByName = paperService.searchPaperByMemberName(target);
