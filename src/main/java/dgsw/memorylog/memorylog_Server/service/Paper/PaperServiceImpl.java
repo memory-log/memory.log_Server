@@ -32,7 +32,20 @@ public class PaperServiceImpl implements PaperService{
 
     /**
      * 롤링페이퍼 조회
-     * @return 롤링페이퍼 정보
+     * @return 내 롤링페이퍼 글
+     */
+    @Override
+    public List<Paper> getMyPaper(String name) {
+        try {
+            return paperRepo.findAllByMember_Name(name);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 롤링페이퍼 조회
+     * @return 전체 롤링페이퍼 글
      */
     @Override
     public List<Paper> showPaper() {
