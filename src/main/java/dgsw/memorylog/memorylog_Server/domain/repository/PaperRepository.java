@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface PaperRepository extends JpaRepository<Paper, Integer> {
+    public Paper findByIdx(Integer idx);
     public List<Paper> findAllByScope(PaperScope scope);
     public List<Paper> findAllByMember_Name(String name);
     public List<Paper> findAllByTitleContaining(String title);
