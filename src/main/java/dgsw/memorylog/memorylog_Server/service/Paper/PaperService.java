@@ -9,4 +9,7 @@ import java.util.List;
 public interface PaperService {
     public void createPaper(PaperCreatePaperVo paperCreatePaperVo);
     public List<Paper> showPaper();
+    public List<Paper> getMyPaper(String name);
+    public List<Paper> searchPaperByTitle(String title);
+    public List<Paper> searchPaperByMemberName(String name);
 }
