@@ -1,12 +1,14 @@
 package dgsw.memorylog.memorylog_Server.service.Paper;
 
-import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
+import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PaperServiceImpl implements PaperService{
@@ -18,11 +20,24 @@ public class PaperServiceImpl implements PaperService{
      * @return 롤링페이퍼 인덱스
      */
     @Override
-    public void createPaper(Member member, PaperCreatePaperVo paperCreatePaperVo) {
+    public void createPaper(PaperCreatePaperVo paperCreatePaperVo) {
         try {
             ModelMapper modelMapper = new ModelMapper();
             Paper mappedPaper = modelMapper.map(paperCreatePaperVo, Paper.class);
             paperRepo.save(mappedPaper);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 롤링페이퍼 조회
+     * @return 롤링페이퍼 정보
+     */
+    @Override
+    public List<Paper> showPaper() {
+        try {
+            return paperRepo.findAllByScope(PaperScope.PUBLIC);
         } catch (Exception e) {
             throw e;
         }

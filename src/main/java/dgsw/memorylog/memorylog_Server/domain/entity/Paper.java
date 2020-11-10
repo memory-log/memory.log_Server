@@ -1,5 +1,6 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import lombok.Getter;
@@ -8,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "paper")
@@ -19,7 +21,7 @@ public class Paper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @ManyToOne(targetEntity=Member.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=Member.class, fetch=FetchType.EAGER)
     @JoinColumn(columnDefinition = "member_idx")
     private Member member;
 
@@ -34,7 +36,7 @@ public class Paper {
 
     @Column()
     @JsonProperty("end_time")
-    private Date endTime;
+    private LocalDateTime endTime;
 
     @CreatedDate
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
