@@ -1,5 +1,6 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class Paper {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idx;
 
-    @ManyToOne(targetEntity=Member.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=Member.class, fetch=FetchType.EAGER)
     @JoinColumn(columnDefinition = "member_idx")
     private Member member;
 

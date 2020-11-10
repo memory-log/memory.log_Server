@@ -28,7 +28,7 @@ public class PaperCreatePaperVo {
     @NotBlank
     private String code;
 
-    private Integer member;
+    private Member member;
 
     private LocalDateTime endTime;
 }
