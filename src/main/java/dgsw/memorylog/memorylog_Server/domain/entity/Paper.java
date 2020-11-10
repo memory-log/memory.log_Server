@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "paper")
@@ -34,7 +35,7 @@ public class Paper {
 
     @Column()
     @JsonProperty("end_time")
-    private Date endTime;
+    private LocalDateTime endTime;
 
     @CreatedDate
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
