@@ -12,5 +12,5 @@ import java.util.List;
 public interface PaperRepository extends JpaRepository<Paper, Integer> {
     public List<Paper> findAllByScope(PaperScope scope);
     public List<Paper> findAllByMember_Name(String name);
-    public List<Paper> findAllByTitle(String title);
+    public List<Paper> findAllByTitleContaining(String title);
 }
