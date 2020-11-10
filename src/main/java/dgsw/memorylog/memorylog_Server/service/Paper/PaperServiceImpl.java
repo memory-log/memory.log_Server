@@ -42,4 +42,26 @@ public class PaperServiceImpl implements PaperService{
             throw e;
         }
     }
+
+    /**
+     * 롤링페이퍼 검색
+     * @return 롤링페이퍼 정보
+     */
+    @Override
+    public List<Paper> searchPaperByTitle(String title) {
+        try {
+            return paperRepo.findAllByTitle(title);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Paper> searchPaperByMemberName(String name) {
+        try {
+            return paperRepo.findAllByMember_Name(name);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
