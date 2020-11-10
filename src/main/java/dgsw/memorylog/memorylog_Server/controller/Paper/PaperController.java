@@ -1,4 +1,4 @@
-package dgsw.memorylog.memorylog_Server.controller;
+package dgsw.memorylog.memorylog_Server.controller.Paper;
 
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.entity.Paper;

@@ -23,7 +23,6 @@ public class Paper {
 
     @ManyToOne(targetEntity=Member.class, fetch=FetchType.EAGER)
     @JoinColumn(columnDefinition = "member_idx")
-    @Column(nullable = false)
     private Member member;
 
     @Column(nullable = false)

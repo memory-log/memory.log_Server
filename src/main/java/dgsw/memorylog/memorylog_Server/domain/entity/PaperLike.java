@@ -17,11 +17,9 @@ public class PaperLike {
 
     @ManyToOne(targetEntity=Paper.class, fetch=FetchType.LAZY)
     @JoinColumn(columnDefinition = "paper_idx")
-    @Column(nullable = false)
     private Paper paper;
 
     @ManyToOne(targetEntity = Member.class, fetch=FetchType.LAZY)
     @JoinColumn(columnDefinition = "member_idx")
-    @Column(nullable = false)
     private Member member;
 }
