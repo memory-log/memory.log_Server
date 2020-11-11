@@ -30,7 +30,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnsupportedOperationException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Response handleUnsupportedOperationException(UnsupportedOperationException e) {
-        e.printStackTrace();
         return new Response(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
     }
 

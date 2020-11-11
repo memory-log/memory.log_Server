@@ -45,10 +45,9 @@ public class MemberController {
         try {
             Member member = (Member)request.getAttribute("member");
             Map<String, Object> data = new HashMap<String, Object>();
-            System.out.println("멤버" + member);
-            data.put("Idx", member.getIdx());
+            data.put("idx", member.getIdx());
             data.put("name", member.getName());
-            data.put("Email", member.getEmail());
+            data.put("email", member.getEmail());
             return new ResponseData(HttpStatus.OK, "내 정보 받기 성공.", data);
         } catch (HttpClientErrorException e) {
             throw e;
