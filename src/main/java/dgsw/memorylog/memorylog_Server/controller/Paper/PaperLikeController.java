@@ -4,7 +4,9 @@ import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperUpdateLikeVo;
+import dgsw.memorylog.memorylog_Server.enums.UserLike;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperLikeService;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperLikeServiceImpl;
 import io.swagger.annotations.Api;
@@ -18,6 +20,8 @@ import sun.net.www.http.HttpClient;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin
 @Api(value = "롤링페이퍼 좋아요 API")
@@ -30,7 +34,23 @@ public class PaperLikeController {
     @Autowired
     private PaperLikeServiceImpl paperLikeService;
 
-    @PostMapping("")
+    @GetMapping("/getLikeCount")
+    @ApiOperation(value = "좋아요 수 조회")
+    public Response getLikeCount(@RequestParam @Valid Integer paper_idx) {
+        try {
+            Integer count = paperLikeService.getLikeCount(paper_idx);
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("likeCount", count);
+            return new ResponseData(HttpStatus.OK, "좋아요 수 조회 성공", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @PostMapping("/updateLike")
     @ApiOperation(value = "좋아요 / 좋아요 취소")
     public Response updateLike(@RequestParam @Valid Integer paper_idx, HttpServletRequest request) {
         try {
@@ -39,8 +59,11 @@ public class PaperLikeController {
             PaperUpdateLikeVo paperUpdateLikeVo = new PaperUpdateLikeVo();
             paperUpdateLikeVo.setPaper(paper);
             paperUpdateLikeVo.setMember(member);
-            paperLikeService.updateLike(paperUpdateLikeVo);
-            return new Response(HttpStatus.OK, "좋아요 / 좋아요 취소 성공");
+            Enum<UserLike> userLike = paperLikeService.updateLike(paperUpdateLikeVo);
+            if (userLike == UserLike.YES)
+                return new Response(HttpStatus.OK, "좋아요 성공");
+            else
+                return new Response(HttpStatus.OK, "좋아요 취소 성공");
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
