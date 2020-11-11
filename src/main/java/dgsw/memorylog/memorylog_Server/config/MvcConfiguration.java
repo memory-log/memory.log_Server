@@ -15,19 +15,11 @@ public class MvcConfiguration implements WebMvcConfigurer {
     @Autowired
     private AuthInterceptor authInterceptor;
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/member/getInfo")
                 .addPathPatterns("/paper/createPaper")
                 .addPathPatterns("/paper/getMyPaper");
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("*");
     }
 }
