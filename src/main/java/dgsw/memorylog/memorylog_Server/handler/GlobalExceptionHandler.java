@@ -11,10 +11,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
+    @ExceptionHandler(MultipartException.class)
+    public Response handleMultipartException(MultipartException e) {
+        return new Response(HttpStatus.BAD_REQUEST, "검증 오류.");
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public Response handleMissingServletRequestPartException(MissingServletRequestPartException e) {
+        return new Response(HttpStatus.BAD_REQUEST, "검증 오류.");
+    }
+
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Response> handleHttpClientErrorException(HttpClientErrorException e) {
         Response data = new Response(e.getStatusCode(), e.getMessage());
