@@ -71,21 +71,6 @@ public class EmailAuthenticationServiceImpl implements EmailAuthenticationServic
     }
 
     @Override
-    public void sendEmail(String email, String title, String content) {
-//        try {
-//            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-//            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
-//            helper.setTo(email);
-//            helper.setSubject(title);
-//            helper.setFrom(senderEmail);
-//            helper.setText(content, true);
-//            javaMailSender.send(mimeMessage);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    }
-
-    @Override
     public boolean emailConfirm(String code) {
         if (code == null) {
             return false;
