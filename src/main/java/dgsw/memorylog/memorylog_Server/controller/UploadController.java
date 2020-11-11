@@ -3,6 +3,7 @@ package dgsw.memorylog.memorylog_Server.controller;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.service.Upload.UploadServiceImpl;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -29,6 +30,7 @@ public class UploadController {
     private UploadServiceImpl uploadService;
 
     @PostMapping("/upload")
+    @ApiOperation(value = "이미지 업로드")
     public ResponseData uploadFile(@Valid @RequestParam("file") MultipartFile file) {
         try {
             String fileName = uploadService.storeFile(file);
@@ -46,6 +48,7 @@ public class UploadController {
     }
 
     @GetMapping("/images/{fileName:.+}")
+    @ApiOperation(value = "이미지 다운로드 ( 필요에 한에서 )")
     public ResponseEntity downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = uploadService.loadFileAsResource(fileName);
 
