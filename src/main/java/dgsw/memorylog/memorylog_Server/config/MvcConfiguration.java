@@ -21,7 +21,8 @@ public class MvcConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(authInterceptor)
                 .addPathPatterns("/member/getInfo")
                 .addPathPatterns("/paper/createPaper")
-                .addPathPatterns("/paper/getMyPaper");
+                .addPathPatterns("/paper/getMyPaper")
+                .addPathPatterns("/paperLike");
     }
 
     @Override
