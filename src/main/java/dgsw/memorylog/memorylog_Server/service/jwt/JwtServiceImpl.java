@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
@@ -83,6 +84,10 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public Member validateToken(String token) {
         try {
+            if (StringUtils.isEmpty(token)) {
+                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "권한 없음.");
+            }
+
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretAccessKey))
                     .parseClaimsJws(token).getBody();
 
@@ -90,7 +95,7 @@ public class JwtServiceImpl implements JwtService {
 
             if (!member.isPresent()) {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "회원 없음");
-           }
+            }
 
             return member.get();
         } catch (HttpClientErrorException e) {
