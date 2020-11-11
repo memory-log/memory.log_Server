@@ -22,7 +22,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/member/getInfo")
                 .addPathPatterns("/paper/createPaper")
                 .addPathPatterns("/paper/getMyPaper")
-                .addPathPatterns("/paperLike");
+                .addPathPatterns("/paperLike/updateLike");
     }
 
     @Override

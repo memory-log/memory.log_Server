@@ -12,6 +12,8 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface PaperLikeRepository extends JpaRepository<PaperLike, Integer> {
+    public Integer countByPaperIdx(Integer paper_idx);
+
     public Integer countByPaperIdxAndMemberIdx(Integer paper_idx, Integer member_idx);
 
     @Transactional
