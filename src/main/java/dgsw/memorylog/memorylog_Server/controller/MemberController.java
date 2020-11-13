@@ -3,10 +3,7 @@ package dgsw.memorylog.memorylog_Server.controller;
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
-import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberEmailVo;
-import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignInVo;
-import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberSignUpVo;
-import dgsw.memorylog.memorylog_Server.domain.vo.member.MemberTokenVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.member.*;
 import dgsw.memorylog.memorylog_Server.enums.JwtToken;
 import dgsw.memorylog.memorylog_Server.service.EmailAuthentication.EmailAuthenticationServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.Member.MemberServiceImpl;
@@ -115,6 +112,21 @@ public class MemberController {
             memberService.validateDupEmail(memberEmailVo.getEmail());
             emailAuthenticationService.sendEmailCode(memberEmailVo.getEmail());
             return new Response(HttpStatus.OK, "전송 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @PutMapping("/editInfo")
+    @ApiOperation(value = "내 정보 수정")
+    public Response editInfo(@RequestBody @Valid MemberEditVo memberEditVo, HttpServletRequest request) {
+        try {
+            Member member = (Member)request.getAttribute("member");
+            memberService.editInfo(memberEditVo, member);
+            return new Response(HttpStatus.OK, "수정 성공.");
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {

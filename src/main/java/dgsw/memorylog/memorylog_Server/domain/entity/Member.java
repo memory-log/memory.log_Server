@@ -1,6 +1,7 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +22,10 @@ public class Member {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column()
+    @JsonProperty("profile_image")
+    private String profileImage;
 
     @Column(name = "pw", nullable = false)
     @JsonIgnore
