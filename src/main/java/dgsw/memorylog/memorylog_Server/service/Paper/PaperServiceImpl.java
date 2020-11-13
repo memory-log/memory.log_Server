@@ -45,10 +45,23 @@ public class PaperServiceImpl implements PaperService{
 
     /**
      * 롤링페이퍼 조회
+     * @return 하나의 롤링페이퍼 글
+     */
+    @Override
+    public Paper showOnePaper(Integer paper_idx) {
+        try {
+            return paperRepo.findByIdx(paper_idx);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 롤링페이퍼 조회
      * @return 전체 롤링페이퍼 글
      */
     @Override
-    public List<Paper> showPaper() {
+    public List<Paper> showAllPaper() {
         try {
             return paperRepo.findAllByScope(PaperScope.PUBLIC);
         } catch (Exception e) {
