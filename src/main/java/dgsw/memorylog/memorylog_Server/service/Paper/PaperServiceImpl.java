@@ -63,7 +63,7 @@ public class PaperServiceImpl implements PaperService{
     @Override
     public List<Paper> searchPaperByTitle(String title) {
         try {
-            return paperRepo.findAllByTitle(title);
+            return paperRepo.findAllByTitleContaining(title);
         } catch (Exception e) {
             throw e;
         }
