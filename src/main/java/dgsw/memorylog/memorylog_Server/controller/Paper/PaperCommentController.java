@@ -1,0 +1,93 @@
+package dgsw.memorylog.memorylog_Server.controller.Paper;
+
+import dgsw.memorylog.memorylog_Server.domain.entity.Member;
+import dgsw.memorylog.memorylog_Server.domain.entity.PaperComment;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
+import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
+import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentCreateVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentEditVo;
+import dgsw.memorylog.memorylog_Server.service.PaperComment.PaperCommentServiceImpl;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@CrossOrigin
+@Api(value = "페이퍼 코멘트 API")
+@RestController
+@RequestMapping("/paperComment")
+public class PaperCommentController {
+
+    @Autowired
+    private PaperCommentServiceImpl paperCommentService;
+
+    @PostMapping("/createPaperComment")
+    @ApiOperation(value = "코멘트 생성")
+    public Response createPaperComment(HttpServletRequest request, @RequestBody @Valid PaperCommentCreateVo paperCommentCreateVo) {
+        try {
+            Member member = (Member) request.getAttribute("member");
+            paperCommentService.createPaperComment(member, paperCommentCreateVo);
+            return new Response(HttpStatus.OK, "코멘트 생성 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @GetMapping("/show/{paperIdx}")
+    @ApiOperation(value = "코멘트 조회")
+    public ResponseData getPaperComments(@PathVariable("paperIdx") @Valid Integer paperIdx) {
+        try {
+            List<PaperComment> paperComments = paperCommentService.getPaperComments(paperIdx);
+            Map<String, Object> data = new HashMap<>();
+            data.put("paperComments", paperComments);
+            return new ResponseData(HttpStatus.OK, "조회 성공.", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @PutMapping("/edit/{paperCommentIdx}")
+    @ApiOperation(value = "코멘트 수정")
+    public Response editPaperComment(@PathVariable("paperCommentIdx") @Valid Integer paperCommentIdx, HttpServletRequest request,
+                                     @RequestBody @Valid PaperCommentEditVo paperCommentEditVo) {
+        try {
+            Member member = (Member) request.getAttribute("member");
+            paperCommentService.editPaperComment(member, paperCommentIdx, paperCommentEditVo);
+            return new Response(HttpStatus.OK, "수정 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @DeleteMapping("/delete/{paperCommentIdx}")
+    @ApiOperation(value = "코멘트 삭제")
+    public Response deletePaperComment(@PathVariable("paperCommentIdx") @Valid Integer paperCommentIdx, HttpServletRequest request) {
+        try {
+            Member member = (Member) request.getAttribute("member");
+            paperCommentService.deletePaperComment(member, paperCommentIdx);
+            return new Response(HttpStatus.OK, "삭제 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+}

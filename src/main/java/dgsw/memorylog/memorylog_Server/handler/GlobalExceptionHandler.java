@@ -3,6 +3,7 @@ package dgsw.memorylog.memorylog_Server.handler;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,11 +15,18 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import javax.validation.UnexpectedTypeException;
+
 @ControllerAdvice
 @ResponseBody
 public class GlobalExceptionHandler {
     @ExceptionHandler(MultipartException.class)
     public Response handleMultipartException(MultipartException e) {
+        return new Response(HttpStatus.BAD_REQUEST, "검증 오류.");
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Response handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
         return new Response(HttpStatus.BAD_REQUEST, "검증 오류.");
     }
 
