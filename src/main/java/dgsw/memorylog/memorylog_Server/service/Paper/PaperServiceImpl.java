@@ -58,10 +58,23 @@ public class PaperServiceImpl implements PaperService{
 
     /**
      * 롤링페이퍼 조회
-     * @return 전체 롤링페이퍼 글
+     * @return 공개 범위가 ONLYCODE인 롤링페이퍼 글
      */
     @Override
-    public List<Paper> showAllPaper() {
+    public Paper showOnlyCodePaper(Integer paper_idx, String code) {
+        try {
+            return paperRepo.findByIdxAndCode(paper_idx, code);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 롤링페이퍼 조회
+     * @return 공개 범위가 PUBLIC인 롤링페이퍼 글
+     */
+    @Override
+    public List<Paper> showPublicPaper() {
         try {
             return paperRepo.findAllByScope(PaperScope.PUBLIC);
         } catch (Exception e) {
