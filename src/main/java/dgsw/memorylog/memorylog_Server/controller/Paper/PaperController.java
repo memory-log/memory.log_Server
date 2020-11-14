@@ -65,11 +65,16 @@ public class PaperController {
 
     @GetMapping("/showPaper")
     @ApiOperation(value = "롤링페이퍼 조회")
-    public Response showPaper() {
+    public Response showPaper(@RequestParam(required = false) Integer paper_idx) {
         try {
-            List<Paper> papers = paperService.showPaper();
             Map<String, Object> data = new HashMap<String, Object>();
-            data.put("Papers", papers);
+            if (paper_idx == null) {
+                List<Paper> papers = paperService.showAllPaper();
+                data.put("Papers", papers);
+            } else {
+                Paper papers = paperService.showOnePaper(paper_idx);
+                data.put("Papers", papers);
+            }
             return new ResponseData(HttpStatus.OK, "롤링페이퍼 조회 성공.", data);
         } catch (HttpClientErrorException e) {
             throw e;
