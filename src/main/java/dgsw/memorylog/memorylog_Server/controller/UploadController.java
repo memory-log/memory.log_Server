@@ -24,12 +24,13 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @Api(value = "업로드 Api")
+@RequestMapping("/upload")
 public class UploadController {
 
     @Autowired
     private UploadServiceImpl uploadService;
 
-    @PostMapping("/upload")
+    @PostMapping("/")
     @ApiOperation(value = "이미지 업로드")
     public ResponseData uploadFile(@Valid @RequestParam("file") MultipartFile file) {
         try {
@@ -47,7 +48,7 @@ public class UploadController {
         }
     }
 
-    @GetMapping("/images/{fileName:.+}")
+    @GetMapping("/{fileName:.+}")
     @ApiOperation(value = "이미지 다운로드 ( 필요에 한에서 )")
     public ResponseEntity downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = uploadService.loadFileAsResource(fileName);
