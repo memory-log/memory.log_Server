@@ -35,6 +35,9 @@ public class PaperComment {
     private Integer locationY;
 
     @Column()
+    private String fontFamily;
+
+    @Column()
     private String comment;
 
     @Column()

@@ -85,7 +85,7 @@ public class JwtServiceImpl implements JwtService {
     public Member validateToken(String token) {
         try {
             if (StringUtils.isEmpty(token)) {
-                throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "권한 없음.");
+                throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.");
             }
 
             Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secretAccessKey))
