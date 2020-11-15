@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.thymeleaf.util.StringUtils;
 
+import java.util.Optional;
+
 @Service
 public class MemberServiceImpl implements MemberService{
     @Autowired
@@ -91,15 +93,19 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public void editInfo(MemberEditVo memberEditVo, Member member) {
         try {
-            boolean name = StringUtils.isEmpty(memberEditVo.getName());
-            boolean profileImage = StringUtils.isEmpty(memberEditVo.getProfileImage());
+            if (member == null) {
+                throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.");
+            }
+            boolean nameIsExist = StringUtils.isEmpty(memberEditVo.getName());
+            boolean profileImageIsExist = StringUtils.isEmpty(memberEditVo.getProfileImage());
 
-            if (name && profileImage) {
+            if (nameIsExist && profileImageIsExist) {
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.");
             }
 
-            member.setName(name ? member.getName(): memberEditVo.getName());
-            member.setName(profileImage ? member.getProfileImage(): memberEditVo.getProfileImage());
+            member.setName(Optional.ofNullable(memberEditVo.getName()).orElse(member.getName()));
+            member.setProfileImage(Optional.ofNullable(memberEditVo.getProfileImage()).orElse(member.getProfileImage()));
+
             memberRepo.save(member);
         } catch (Exception e) {
             throw e;
