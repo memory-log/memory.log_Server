@@ -5,6 +5,7 @@ import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
+import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperService;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
 import io.swagger.annotations.Api;
@@ -16,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,17 +67,35 @@ public class PaperController {
 
     @GetMapping("/showPaper")
     @ApiOperation(value = "롤링페이퍼 조회")
-    public Response showPaper(@RequestParam(required = false) Integer paper_idx) {
+    public Response showPaper(@RequestParam(required = false) Integer paper_idx, String code, Boolean isWriter) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             if (paper_idx == null) {
-                List<Paper> papers = paperService.showAllPaper();
+                List<Paper> papers = paperService.showPublicPaper();
                 data.put("Papers", papers);
             } else {
                 Paper papers = paperService.showOnePaper(paper_idx);
+                switch (papers.getScope()) {
+                    case PUBLIC:
+                        break;
+                    case ONLY_CODE:
+                        papers = paperService.showOnlyCodePaper(paper_idx, code);
+                        if (papers == null) {
+                            throw new NullPointerException();
+                        }
+                        break;
+                    case PRIVATE:
+                        if (isWriter) {
+                            break;
+                        } else {
+                            return new Response(HttpStatus.BAD_REQUEST, "이 롤링페이퍼에는 작성자만 접근 하실 수 있습니다.");
+                        }
+                }
                 data.put("Papers", papers);
             }
             return new ResponseData(HttpStatus.OK, "롤링페이퍼 조회 성공.", data);
+        } catch (NullPointerException e) {
+            return new Response(HttpStatus.BAD_REQUEST, "이 롤링페이퍼에 접근하시기 위해서는 접근 코드를 입력하시거나 작성자여야 합니다");
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
