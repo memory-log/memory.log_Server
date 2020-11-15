@@ -7,6 +7,7 @@ import dgsw.memorylog.memorylog_Server.domain.repository.PaperCommentRepository;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentCreateVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentEditVo;
+import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PaperCommentServiceImpl implements PaperCommentService {
@@ -35,11 +38,19 @@ public class PaperCommentServiceImpl implements PaperCommentService {
     public void createPaperComment(Member member, PaperCommentCreateVo paperCommentCreateVo) {
         try {
             if ((StringUtils.isEmpty(paperCommentCreateVo.getImage()) && StringUtils.isEmpty(paperCommentCreateVo.getComment())) ||
-                    (StringUtils.isEmpty(paperCommentCreateVo.getComment()) && StringUtils.isEmpty(paperCommentCreateVo.getFontFamily()))) {
+                    (StringUtils.isEmpty(paperCommentCreateVo.getComment()) && StringUtils.isEmpty(paperCommentCreateVo.getFontFamily()) &&
+                            StringUtils.isEmpty(paperCommentCreateVo.getColor()))) {
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.");
             }
+
+            Paper paper = paperRepo.findByIdx(paperCommentCreateVo.getPaperIdx());
+            if ((paper.getEndTime() != null && paper.getEndTime().isAfter(LocalDateTime.now())) || paper.getScope() == PaperScope.PRIVATE) {
+                throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.");
+            }
+
             ModelMapper modelMapper = new ModelMapper();
             PaperComment mappedPaper = modelMapper.map(paperCommentCreateVo, PaperComment.class);
+            mappedPaper.setMember(member);
             paperCommentRepo.save(mappedPaper);
         } catch (Exception e) {
             throw e;
@@ -78,7 +89,8 @@ public class PaperCommentServiceImpl implements PaperCommentService {
                 throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "코멘트 없음.");
             }
 
-            if (paperComment.getMember() != member) {
+            if (paperComment.getMember() != member || paperComment.getPaper().getEndTime().isAfter(LocalDateTime.now()) ||
+                    paperComment.getPaper().getScope() == PaperScope.PRIVATE) {
                 throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.");
             }
 
@@ -86,12 +98,12 @@ public class PaperCommentServiceImpl implements PaperCommentService {
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.");
             }
 
-            paperComment.setComment(StringUtils.isEmpty(paperCommentEditVo.getComment()) ? paperComment.getComment(): paperCommentEditVo.getComment());
-            paperComment.setLocationX(paperCommentEditVo.getLocationX() != null ? paperComment.getLocationX(): paperCommentEditVo.getLocationX());
-            paperComment.setLocationY(paperCommentEditVo.getLocationY() != null ? paperComment.getLocationY(): paperCommentEditVo.getLocationY());
-            paperComment.setFontFamily(StringUtils.isEmpty(paperCommentEditVo.getFontFamily()) ? paperComment.getFontFamily(): paperCommentEditVo.getFontFamily());
-            paperComment.setImage(StringUtils.isEmpty(paperCommentEditVo.getImage()) ? paperComment.getImage(): paperCommentEditVo.getImage());
-            paperComment.setUpdatedAt((java.sql.Date) new Date());
+            paperComment.setComment(Optional.ofNullable(paperCommentEditVo.getComment()).orElse(paperComment.getComment()));
+            paperComment.setLocationX(Optional.ofNullable(paperCommentEditVo.getLocationX()).orElse(paperComment.getLocationX()));
+            paperComment.setLocationY(Optional.ofNullable(paperCommentEditVo.getLocationY()).orElse(paperComment.getLocationY()));
+            paperComment.setFontFamily(Optional.ofNullable(paperCommentEditVo.getFontFamily()).orElse(paperComment.getFontFamily()));
+            paperComment.setImage(Optional.ofNullable(paperCommentEditVo.getImage()).orElse(paperComment.getImage()));
+            paperComment.setUpdatedAt(new Date());
             paperCommentRepo.save(paperComment);
         } catch (Exception e) {
             throw e;
