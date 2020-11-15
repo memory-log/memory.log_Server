@@ -17,6 +17,8 @@ public class PaperCommentCreateVo {
 
     private String comment;
 
+    private String color;
+
     private String fontFamily;
 
     private String image;

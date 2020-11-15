@@ -7,6 +7,7 @@ import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperUpdateLikeVo;
 import dgsw.memorylog.memorylog_Server.enums.UserLike;
+import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperLikeService;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperLikeServiceImpl;
 import io.swagger.annotations.Api;
@@ -34,6 +35,9 @@ public class PaperLikeController {
     @Autowired
     private PaperLikeServiceImpl paperLikeService;
 
+    @Autowired
+    private AuthorizationCheck authorizationCheck;
+
     @GetMapping("/getLikeCount")
     @ApiOperation(value = "좋아요 수 조회")
     public Response getLikeCount(@RequestParam @Valid Integer paper_idx) {
@@ -54,6 +58,7 @@ public class PaperLikeController {
     @ApiOperation(value = "좋아요 / 좋아요 취소")
     public Response updateLike(@RequestParam @Valid Integer paper_idx, HttpServletRequest request) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             Paper paper = paperRepo.findByIdx(paper_idx);
             PaperUpdateLikeVo paperUpdateLikeVo = new PaperUpdateLikeVo();

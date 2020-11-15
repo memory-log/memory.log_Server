@@ -5,6 +5,7 @@ import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.member.*;
 import dgsw.memorylog.memorylog_Server.enums.JwtToken;
+import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
 import dgsw.memorylog.memorylog_Server.service.EmailAuthentication.EmailAuthenticationServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.Member.MemberServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.jwt.JwtServiceImpl;
@@ -36,10 +37,14 @@ public class MemberController {
     @Autowired
     private EmailAuthenticationServiceImpl emailAuthenticationService;
 
+    @Autowired
+    private AuthorizationCheck authorizationCheck;
+
     @GetMapping("/getInfo")
     @ApiOperation(value = "내 정보 받기")
     public ResponseData getInfo(HttpServletRequest request) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("idx", member.getIdx());
@@ -124,6 +129,7 @@ public class MemberController {
     @ApiOperation(value = "내 정보 수정")
     public Response editInfo(@RequestBody @Valid MemberEditVo memberEditVo, HttpServletRequest request) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             memberService.editInfo(memberEditVo, member);
             return new Response(HttpStatus.OK, "수정 성공.");
