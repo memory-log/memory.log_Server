@@ -12,5 +12,7 @@ public class PaperCommentEditVo {
 
     private String fontFamily;
 
+    private String color;
+
     private String image;
 }
