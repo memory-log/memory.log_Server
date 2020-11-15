@@ -34,7 +34,6 @@ public class AuthInterceptor implements HandlerInterceptor {
                 if (request.getMethod().equals("OPTIONS")) {
                     return true;
                 }
-                throw new HttpClientErrorException(HttpStatus.UNAUTHORIZED, "인증 안됨.");
             }
 
 
