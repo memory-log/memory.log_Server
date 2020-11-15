@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "paper")
@@ -41,8 +42,9 @@ public class Paper {
     @CreatedDate
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
     @JsonProperty("created_at")
-    private Date createdAt;
+    private Date createdAt = new Date();
 
+    @UpdateTimestamp()
     @Column()
     @JsonProperty("updated_at")
     private Date updatedAt;

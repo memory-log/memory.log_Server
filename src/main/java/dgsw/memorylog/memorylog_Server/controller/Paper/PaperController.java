@@ -6,6 +6,7 @@ import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
+import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperService;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
 import io.swagger.annotations.Api;
@@ -31,10 +32,14 @@ public class PaperController {
     @Autowired
     private PaperServiceImpl paperService;
 
+    @Autowired
+    private AuthorizationCheck authorizationCheck;
+
     @PostMapping("/createPaper")
     @ApiOperation(value = "롤링페이퍼 생성")
     public Response createPaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             paperCreatePaperVo.setMember(member);
             paperService.createPaper(paperCreatePaperVo);
@@ -52,6 +57,7 @@ public class PaperController {
     @ApiOperation(value = "내 롤링페이퍼 글 조회")
     public Response getMyPaper(HttpServletRequest request) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             List<Paper> papers = paperService.getMyPaper(member.getName());
             Map<String, Object> data = new HashMap<String, Object>();
@@ -67,7 +73,7 @@ public class PaperController {
 
     @GetMapping("/showPaper")
     @ApiOperation(value = "롤링페이퍼 조회")
-    public Response showPaper(@RequestParam(required = false) Integer paper_idx, String code, Boolean isWriter) {
+    public Response showPaper(@RequestParam(required = false) Integer paper_idx, String code, HttpServletRequest request) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             if (paper_idx == null) {
@@ -85,7 +91,7 @@ public class PaperController {
                         }
                         break;
                     case PRIVATE:
-                        if (isWriter) {
+                        if (authorizationCheck.check(request)) {
                             break;
                         } else {
                             return new Response(HttpStatus.BAD_REQUEST, "이 롤링페이퍼에는 작성자만 접근 하실 수 있습니다.");

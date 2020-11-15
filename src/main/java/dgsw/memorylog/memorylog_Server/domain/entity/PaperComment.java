@@ -1,17 +1,20 @@
 package dgsw.memorylog.memorylog_Server.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "paper_comment")
 @Getter
 @Setter
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PaperComment {
     @Id
     @Column(name = "idx")
@@ -38,6 +41,9 @@ public class PaperComment {
     private String fontFamily;
 
     @Column()
+    private String color;
+
+    @Column()
     private String comment;
 
     @Column()
@@ -46,8 +52,9 @@ public class PaperComment {
     @CreatedDate
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP", nullable = false)
     @JsonProperty("created_at")
-    private Date createdAt;
+    private Date createdAt = new Date();
 
+    @UpdateTimestamp()
     @Column()
     @JsonProperty("updated_at")
     private Date updatedAt;

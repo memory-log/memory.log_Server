@@ -1,11 +1,14 @@
 package dgsw.memorylog.memorylog_Server.controller.Paper;
 
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
+import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.entity.PaperComment;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentCreateVo;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentEditVo;
+import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
+import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.PaperComment.PaperCommentServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,10 +32,14 @@ public class PaperCommentController {
     @Autowired
     private PaperCommentServiceImpl paperCommentService;
 
+    @Autowired
+    private AuthorizationCheck authorizationCheck;
+
     @PostMapping("/createPaperComment")
     @ApiOperation(value = "코멘트 생성")
     public Response createPaperComment(HttpServletRequest request, @RequestBody @Valid PaperCommentCreateVo paperCommentCreateVo) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member) request.getAttribute("member");
             paperCommentService.createPaperComment(member, paperCommentCreateVo);
             return new Response(HttpStatus.OK, "코멘트 생성 성공.");
@@ -46,12 +53,12 @@ public class PaperCommentController {
 
     @GetMapping("/show/{paperIdx}")
     @ApiOperation(value = "코멘트 조회")
-    public ResponseData getPaperComments(@PathVariable("paperIdx") @Valid Integer paperIdx) {
+    public Response getPaperComments(@PathVariable("paperIdx") Integer paperIdx) {
         try {
             List<PaperComment> paperComments = paperCommentService.getPaperComments(paperIdx);
-            Map<String, Object> data = new HashMap<>();
+            Map<String, Object> data = new HashMap<String, Object>();
             data.put("paperComments", paperComments);
-            return new ResponseData(HttpStatus.OK, "조회 성공.", data);
+            return new ResponseData(HttpStatus.OK, "롤링페이퍼 조회 성공", data);
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {
@@ -65,6 +72,7 @@ public class PaperCommentController {
     public Response editPaperComment(@PathVariable("paperCommentIdx") @Valid Integer paperCommentIdx, HttpServletRequest request,
                                      @RequestBody @Valid PaperCommentEditVo paperCommentEditVo) {
         try {
+            authorizationCheck.check(request);
             Member member = (Member) request.getAttribute("member");
             paperCommentService.editPaperComment(member, paperCommentIdx, paperCommentEditVo);
             return new Response(HttpStatus.OK, "수정 성공.");
