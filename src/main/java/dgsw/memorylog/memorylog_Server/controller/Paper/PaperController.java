@@ -5,6 +5,8 @@ import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperHitPaperVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperModifyPaperVo;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
 import dgsw.memorylog.memorylog_Server.lib.MakeRandomCode;
@@ -58,6 +60,23 @@ public class PaperController {
         }
     }
 
+    @PutMapping("/modifyPaper/{paperIdx}")
+    @ApiOperation(value = "롤링페이퍼 수정")
+    public Response modifyPaper(@PathVariable("paperIdx") Integer paperIdx, @RequestBody @Valid PaperModifyPaperVo paperModifyPaperVo,
+                                HttpServletRequest request) {
+        try {
+            authorizationCheck.check(request);
+            Member member = (Member)request.getAttribute("member");
+
+            return new Response(HttpStatus.OK, "롤링페이퍼 수정 성공.");
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
     @GetMapping("/getMyPaper")
     @ApiOperation(value = "내 롤링페이퍼 글 조회")
     public Response getMyPaper(HttpServletRequest request) {
@@ -68,6 +87,22 @@ public class PaperController {
             Map<String, Object> data = new HashMap<String, Object>();
             data.put("Papers", papers);
             return new ResponseData(HttpStatus.OK, "롤링페이퍼 조회 성공", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
+    @GetMapping("/hitPaper")
+    @ApiOperation(value = "롤링페이퍼 인기순 조회")
+    public ResponseData showHitPaper() {
+        try {
+            List<PaperHitPaperVo> papers = paperService.showHitPaper();
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("Papers", papers);
+            return new ResponseData(HttpStatus.OK, "롤링페이퍼 인기순 조회 성공", data);
         } catch (HttpClientErrorException e) {
             throw e;
         } catch (Exception e) {

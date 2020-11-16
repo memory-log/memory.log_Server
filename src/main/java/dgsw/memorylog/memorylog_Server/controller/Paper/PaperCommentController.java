@@ -1,14 +1,12 @@
 package dgsw.memorylog.memorylog_Server.controller.Paper;
 
 import dgsw.memorylog.memorylog_Server.domain.entity.Member;
-import dgsw.memorylog.memorylog_Server.domain.entity.Paper;
 import dgsw.memorylog.memorylog_Server.domain.entity.PaperComment;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.Response;
 import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentCreateVo;
-import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentEditVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentModifyVo;
 import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
-import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
 import dgsw.memorylog.memorylog_Server.service.PaperComment.PaperCommentServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -67,14 +65,14 @@ public class PaperCommentController {
         }
     }
 
-    @PutMapping("/edit/{paperCommentIdx}")
+    @PutMapping("/modify/{paperCommentIdx}")
     @ApiOperation(value = "코멘트 수정")
     public Response editPaperComment(@PathVariable("paperCommentIdx") @Valid Integer paperCommentIdx, HttpServletRequest request,
-                                     @RequestBody @Valid PaperCommentEditVo paperCommentEditVo) {
+                                     @RequestBody @Valid PaperCommentModifyVo paperCommentModifyVo) {
         try {
             authorizationCheck.check(request);
             Member member = (Member) request.getAttribute("member");
-            paperCommentService.editPaperComment(member, paperCommentIdx, paperCommentEditVo);
+            paperCommentService.editPaperComment(member, paperCommentIdx, paperCommentModifyVo);
             return new Response(HttpStatus.OK, "수정 성공.");
         } catch (HttpClientErrorException e) {
             throw e;

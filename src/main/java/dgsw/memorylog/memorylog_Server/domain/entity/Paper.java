@@ -36,6 +36,9 @@ public class Paper {
     private String code;
 
     @Column()
+    private String thumbnail;
+
+    @Column()
     @JsonProperty("end_time")
     private LocalDateTime endTime;
 
