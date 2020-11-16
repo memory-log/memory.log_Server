@@ -25,7 +25,6 @@ public class PaperCreatePaperVo {
     @NotNull
     private PaperScope scope;
 
-    @NotBlank
     private String code;
 
     private Member member;
