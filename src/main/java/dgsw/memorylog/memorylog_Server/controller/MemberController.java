@@ -59,6 +59,23 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/getOtherInfo")
+    @ApiOperation(value = "다른 사람 정보 받기")
+    public ResponseData getOtherInfo(@RequestParam Integer idx) {
+        try {
+            Member member = memberService.getOtherInfo(idx);
+            Map<String, Object> data = new HashMap<String, Object>();
+            data.put("idx", member.getIdx());
+            data.put("name", member.getName());
+            return new ResponseData(HttpStatus.OK, "정보 받기 성공.", data);
+        } catch (HttpClientErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
+        }
+    }
+
     @PostMapping("/signIn")
     @ApiOperation(value = "로그인")
     public ResponseData signIn(@RequestBody @Valid MemberSignInVo memberSignInVo) {

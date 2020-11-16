@@ -6,7 +6,7 @@ import dgsw.memorylog.memorylog_Server.domain.entity.PaperComment;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperCommentRepository;
 import dgsw.memorylog.memorylog_Server.domain.repository.PaperRepository;
 import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentCreateVo;
-import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentEditVo;
+import dgsw.memorylog.memorylog_Server.domain.vo.paperComment.PaperCommentModifyVo;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +82,7 @@ public class PaperCommentServiceImpl implements PaperCommentService {
      * @param paperCommentIdx
      */
     @Override
-    public void editPaperComment(Member member, Integer paperCommentIdx, PaperCommentEditVo paperCommentEditVo) {
+    public void editPaperComment(Member member, Integer paperCommentIdx, PaperCommentModifyVo paperCommentModifyVo) {
         try {
             PaperComment paperComment = paperCommentRepo.findByIdx(paperCommentIdx);
             if (paperComment == null) {
@@ -94,15 +94,15 @@ public class PaperCommentServiceImpl implements PaperCommentService {
                 throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "권한 없음.");
             }
 
-            if (paperCommentEditVo == null) {
+            if (paperCommentModifyVo == null) {
                 throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "검증 오류.");
             }
 
-            paperComment.setComment(Optional.ofNullable(paperCommentEditVo.getComment()).orElse(paperComment.getComment()));
-            paperComment.setLocationX(Optional.ofNullable(paperCommentEditVo.getLocationX()).orElse(paperComment.getLocationX()));
-            paperComment.setLocationY(Optional.ofNullable(paperCommentEditVo.getLocationY()).orElse(paperComment.getLocationY()));
-            paperComment.setFontFamily(Optional.ofNullable(paperCommentEditVo.getFontFamily()).orElse(paperComment.getFontFamily()));
-            paperComment.setImage(Optional.ofNullable(paperCommentEditVo.getImage()).orElse(paperComment.getImage()));
+            paperComment.setComment(Optional.ofNullable(paperCommentModifyVo.getComment()).orElse(paperComment.getComment()));
+            paperComment.setLocationX(Optional.ofNullable(paperCommentModifyVo.getLocationX()).orElse(paperComment.getLocationX()));
+            paperComment.setLocationY(Optional.ofNullable(paperCommentModifyVo.getLocationY()).orElse(paperComment.getLocationY()));
+            paperComment.setFontFamily(Optional.ofNullable(paperCommentModifyVo.getFontFamily()).orElse(paperComment.getFontFamily()));
+            paperComment.setImage(Optional.ofNullable(paperCommentModifyVo.getImage()).orElse(paperComment.getImage()));
             paperComment.setUpdatedAt(new Date());
             paperCommentRepo.save(paperComment);
         } catch (Exception e) {

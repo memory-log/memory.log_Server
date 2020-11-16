@@ -10,4 +10,5 @@ public interface MemberService {
     public Integer signUp(MemberSignUpVo memberSignUpVo);
     public void validateDupEmail(String email);
     public void editInfo(MemberEditVo memberEditVo, Member member);
+    public Member getOtherInfo(Integer idx);
 }

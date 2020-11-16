@@ -5,27 +5,29 @@ import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.Date;
 
-/**
- * 롤링페이퍼 생성 오브젝트
- */
 @Getter
 @Setter
-public class PaperCreatePaperVo {
-    @NotBlank
+public class PaperHitPaperVo {
+    private Integer idx;
+
+    private Member member;
+
     private String title;
 
-    @NotNull
     private PaperScope scope;
 
     private String code;
 
+    private Integer likeCount;
+
     private String thumbnail;
 
-    private Member member;
-
     private LocalDateTime endTime;
+
+    private Date createdAt;
+
+    private Date updatedAt;
 }
