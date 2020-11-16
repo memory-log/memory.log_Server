@@ -25,7 +25,7 @@ public class MvcConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/paper/showPaper")
                 .addPathPatterns("/paperLike/updateLike")
                 .addPathPatterns("/paperComment/createPaperComment")
-                .addPathPatterns("/paperComment/edit/**")
+                .addPathPatterns("/paperComment/modify/**")
                 .addPathPatterns("/paperComment/delete/**");
     }
 }

@@ -3,7 +3,7 @@ package dgsw.memorylog.memorylog_Server.domain.vo.paperComment;
 import lombok.Getter;
 
 @Getter
-public class PaperCommentEditVo {
+public class PaperCommentModifyVo {
     private Integer locationX;
 
     private Integer locationY;
