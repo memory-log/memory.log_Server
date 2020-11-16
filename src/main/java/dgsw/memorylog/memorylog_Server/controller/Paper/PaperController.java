@@ -7,6 +7,7 @@ import dgsw.memorylog.memorylog_Server.domain.vo.http.ResponseData;
 import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperCreatePaperVo;
 import dgsw.memorylog.memorylog_Server.enums.PaperScope;
 import dgsw.memorylog.memorylog_Server.lib.AuthorizationCheck;
+import dgsw.memorylog.memorylog_Server.lib.MakeRandomCode;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperService;
 import dgsw.memorylog.memorylog_Server.service.Paper.PaperServiceImpl;
 import io.swagger.annotations.Api;
@@ -35,6 +36,9 @@ public class PaperController {
     @Autowired
     private AuthorizationCheck authorizationCheck;
 
+    @Autowired
+    private MakeRandomCode makeRandomCode;
+
     @PostMapping("/createPaper")
     @ApiOperation(value = "롤링페이퍼 생성")
     public Response createPaper(@RequestBody @Valid PaperCreatePaperVo paperCreatePaperVo, HttpServletRequest request) {
@@ -42,6 +46,7 @@ public class PaperController {
             authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
             paperCreatePaperVo.setMember(member);
+            paperCreatePaperVo.setCode(makeRandomCode.createCode(6));
             paperService.createPaper(paperCreatePaperVo);
             Map<String, Object> data = new HashMap<String, Object>();
             return new Response(HttpStatus.OK, "롤링페이퍼 생성 성공.");
