@@ -111,4 +111,19 @@ public class MemberServiceImpl implements MemberService{
             throw e;
         }
     }
+
+    @Override
+    public Member getOtherInfo(Integer idx) {
+        try {
+            Optional<Member> member = memberRepo.findById(idx);
+
+            if (!member.isPresent()) {
+                throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "회원 없음");
+            }
+
+            return member.get();
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 }
