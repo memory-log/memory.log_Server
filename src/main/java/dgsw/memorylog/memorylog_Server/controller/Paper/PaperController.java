@@ -95,29 +95,13 @@ public class PaperController {
         }
     }
 
-    @GetMapping("/hitPaper")
-    @ApiOperation(value = "롤링페이퍼 인기순 조회")
-    public ResponseData showHitPaper() {
-        try {
-            List<PaperHitPaperVo> papers = paperService.showHitPaper();
-            Map<String, Object> data = new HashMap<String, Object>();
-            data.put("Papers", papers);
-            return new ResponseData(HttpStatus.OK, "롤링페이퍼 인기순 조회 성공", data);
-        } catch (HttpClientErrorException e) {
-            throw e;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류.");
-        }
-    }
-
     @GetMapping("/showPaper")
     @ApiOperation(value = "롤링페이퍼 조회")
     public Response showPaper(@RequestParam(required = false) Integer paper_idx, String code, HttpServletRequest request) {
         try {
             Map<String, Object> data = new HashMap<String, Object>();
             if (paper_idx == null) {
-                List<Paper> papers = paperService.showPublicPaper();
+                List<PaperHitPaperVo> papers = paperService.showPublicPaper();
                 data.put("Papers", papers);
             } else {
                 Paper papers = paperService.showOnePaper(paper_idx);

@@ -83,19 +83,10 @@ public class PaperServiceImpl implements PaperService{
 
     /**
      * 롤링페이퍼 조회
-     * @return 공개 범위가 PUBLIC인 롤링페이퍼 글
+     * @return 공개 범위가 PUBLIC인 롤링페이퍼 글 , 좋아요 내림차순 반환
      */
     @Override
-    public List<Paper> showPublicPaper() {
-        try {
-            return paperRepo.findAllByScope(PaperScope.PUBLIC);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
-
-    @Override
-    public List<PaperHitPaperVo> showHitPaper() {
+    public List<PaperHitPaperVo> showPublicPaper() {
         try {
             List<Paper> papers = paperRepo.findAllByScope(PaperScope.PUBLIC);
             List<PaperHitPaperVo> filteredPaper = new ArrayList<>();
