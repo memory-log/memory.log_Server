@@ -32,11 +32,15 @@ public class PaperServiceImpl implements PaperService{
      * @return 롤링페이퍼 인덱스
      */
     @Override
-    public void createPaper(PaperCreatePaperVo paperCreatePaperVo) {
+    public void createPaper(Member member, PaperCreatePaperVo paperCreatePaperVo) {
         try {
-            ModelMapper modelMapper = new ModelMapper();
-            Paper mappedPaper = modelMapper.map(paperCreatePaperVo, Paper.class);
-            paperRepo.save(mappedPaper);
+            Paper paper = new Paper();
+            paper.setEndTime(paperCreatePaperVo.getEndTime());
+            paper.setScope(paperCreatePaperVo.getScope());
+            paper.setMember(member);
+            paper.setThumbnail(paperCreatePaperVo.getThumbnail());
+            paper.setTitle(paperCreatePaperVo.getTitle());
+            paperRepo.save(paper);
         } catch (Exception e) {
             throw e;
         }

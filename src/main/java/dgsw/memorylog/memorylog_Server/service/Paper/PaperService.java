@@ -9,7 +9,7 @@ import dgsw.memorylog.memorylog_Server.domain.vo.paper.PaperModifyPaperVo;
 import java.util.List;
 
 public interface PaperService {
-    public void createPaper(PaperCreatePaperVo paperCreatePaperVo);
+    public void createPaper(Member member, PaperCreatePaperVo paperCreatePaperVo);
     public PaperHitPaperVo showOnePaper(Integer paper_idx);
     public PaperHitPaperVo showOnlyCodePaper(Integer paper_idx, String code);
     public List<PaperHitPaperVo> showPublicPaper();

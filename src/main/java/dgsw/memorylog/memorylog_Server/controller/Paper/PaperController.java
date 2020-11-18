@@ -51,9 +51,8 @@ public class PaperController {
         try {
             authorizationCheck.check(request);
             Member member = (Member)request.getAttribute("member");
-            paperCreatePaperVo.setMember(member);
             paperCreatePaperVo.setCode(makeRandomCode.createCode(6));
-            paperService.createPaper(paperCreatePaperVo);
+            paperService.createPaper(member, paperCreatePaperVo);
             Map<String, Object> data = new HashMap<String, Object>();
             return new Response(HttpStatus.OK, "롤링페이퍼 생성 성공.");
         } catch (HttpClientErrorException e){
