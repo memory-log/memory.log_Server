@@ -10,11 +10,12 @@ import java.util.List;
 
 public interface PaperService {
     public void createPaper(PaperCreatePaperVo paperCreatePaperVo);
-    public Paper showOnePaper(Integer paper_idx);
-    public Paper showOnlyCodePaper(Integer paper_idx, String code);
+    public PaperHitPaperVo showOnePaper(Integer paper_idx);
+    public PaperHitPaperVo showOnlyCodePaper(Integer paper_idx, String code);
     public List<PaperHitPaperVo> showPublicPaper();
-    public List<Paper> getMyPaper(String name);
-    public List<Paper> searchPaperByTitle(String title);
-    public List<Paper> searchPaperByMemberName(String name);
+    public List<PaperHitPaperVo> getMyPaper(String name);
+    public List<PaperHitPaperVo> searchPaperByTitle(String title);
+    public List<PaperHitPaperVo> searchPaperByMemberName(String name);
     public void modifyPaper(Member member, Integer paperIdx, PaperModifyPaperVo paperModifyPaperVo);
+    public List<PaperHitPaperVo> addLikeCount(List<Paper> papers);
 }
