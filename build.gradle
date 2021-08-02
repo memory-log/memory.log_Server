@@ -13,13 +13,31 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.jsonwebtoken:jjwt:0.9.0'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	implementation 'io.jsonwebtoken:jjwt:0.9.0'
 	compileOnly 'org.projectlombok:lombok'
+	compileOnly 'org.springframework.boot:spring-boot-configuration-processor'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.10.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.10.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+	compile 'javax.validation:validation-api:2.0.1.Final'
+	compile 'org.hibernate.validator:hibernate-validator:6.0.8.Final'
+	compile 'javax.el:javax.el-api:3.0.0'
+	compile 'org.glassfish:javax.el:3.0.0'
+	compile 'org.modelmapper:modelmapper:2.3.0'
+	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.0.2'
+	compile group: 'org.springframework.plugin', name: 'spring-plugin-core', version: '1.2.0.RELEASE'
 }
 
 test {
